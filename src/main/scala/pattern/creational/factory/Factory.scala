@@ -3,13 +3,7 @@ package pattern.creational.factory
 /**
   * Created by brianmomongan on 4/6/16.
   */
-class Factory {
-
-
-}
-
 trait Animal {
-
   def talk
 }
 
