@@ -1,4 +1,4 @@
-package com.directory.compositePattern
+package pattern.structural.composite
 
 import scala.annotation.tailrec
 import scala.collection.mutable.ListBuffer
@@ -35,6 +35,21 @@ case class Folder(folderName: String, folderPath: String = "") extends Directory
     newFile
   }
 
+  def deleteFolder(name: String): String = {
+    listFolder find (_.folderName == name) match {
+      case Some(s) =>
+        listFolder -= s
+        "Success"
+      case None    => "Failed"
+    }
+  }
+
+  def deleteFile(name: String): Unit = {
+    listFiles find (_.fileName == name) match {
+      case Some(s) => listFiles -= s
+    }
+  }
+
   def printFolders: List[String] = {
     if (listFolder.nonEmpty)
       listFolder.toList map (f => this + "/" + f.folderName)
@@ -49,7 +64,11 @@ case class Folder(folderName: String, folderPath: String = "") extends Directory
 
   def printAll: List[String] = printFolders ++ printFiles
 
-  def crawl: List[File] = {
+  def allFilesWithPath: List[String] = crawl map (_.toString)
+
+  def allFiles: List[String] = crawl map (_.fileName)
+
+  private def crawl: List[File] = {
 
     @tailrec
     def go(current: Folder, folders: List[Folder] = List(), files: List[File] = List()): List[File] = {
@@ -75,7 +94,12 @@ object Main extends App {
   val cebuFolder = picturesFolder addFolder "cebuImages"
   val cebuImg = cebuFolder addFile "cebuImg.png"
 
-  //rootFolder.crawl map println
+  docsFolder deleteFolder "pictures"
+  rootFolder deleteFile "cv.doc"
+  println(picturesFolder)
+  println(docsFolder.printFolders)
+  docsFolder.allFilesWithPath.map(println)
+
 }
 
 
